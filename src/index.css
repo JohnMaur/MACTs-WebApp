@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/Roboto.woff2) format('woff2');
+  }
+} 
+
+.ant-message {
+  top: 50% !important;
+  border-radius: 8px; /* Adjust border-radius as needed */
+  padding: 10px 15px; /* Adjust padding as needed */
+  background-color: #fff; /* Background color */
+  border: 1px solid #ccc; /* Border color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+@layer component {
+  .librarian-text{
+    @apply sm:text-lg md:text-3xl lg:text-4xl 2xl:text-8xl font-sans
+  }
+  .registrar-text {
+    @apply sm:text-lg md:text-xl lg:text-3xl 2xl:text-5xl font-sans
+  }
+  .tapStatus {
+    @apply sm:text-2xl md:text-4xl lg:text-6xl 2xl:text-8xl font-bold tracking-widest text-green-700
+  }
+}
