@@ -79,7 +79,10 @@ const Sidebar = ({ collapsed }) => {
           </Menu.Item>
         </SubMenu>
 
-        <SubMenu key="Attendance" icon={<SolutionOutlined />} title="Attendance">
+        <Menu.Item key="/Attendance" icon={<SolutionOutlined />}>
+          <Link to="/Attendance">Attendance</Link>
+        </Menu.Item>
+        {/* <SubMenu key="Attendance" icon={<SolutionOutlined />} title="Attendance">
           <Menu.Item key="/Attendance/BTVTEICT-CP-1D">
             <Link to="/Attendance/BTVTEICT-CP-1D">BTVTEICT-CP-1D</Link>
           </Menu.Item>
@@ -92,7 +95,9 @@ const Sidebar = ({ collapsed }) => {
           <Menu.Item key="/Attendance/BTVTEICT-CP-4D">
             <Link to="/Attendance/BTVTEICT-CP-4D">BTVTEICT-CP-4D</Link>
           </Menu.Item>
-        </SubMenu>
+        </SubMenu> */}
+
+
         <Menu.Item key="/RFID/Registration" icon={<IdcardOutlined />}>
           <Link to="/RFID/Registration">RFID Registration</Link>
         </Menu.Item>

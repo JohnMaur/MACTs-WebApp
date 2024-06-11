@@ -10,12 +10,10 @@ const RFID_page = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
     <MainSidebar collapsed={collapsed} />
-    <Layout>
+    <Layout style={{ maxHeight: "100vh" }}>
       <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
         <h1 className="mt-5 mb-2 text-2xl font-bold ml-10 ">RFID Registration</h1>
         <RFID_Content />
-
-
     </Layout>
   </Layout>
   );

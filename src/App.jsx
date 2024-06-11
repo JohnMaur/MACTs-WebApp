@@ -7,7 +7,6 @@ import { Navigate } from 'react-router-dom'; // Import Navigate for fallback
 // Login route
 import AdminLogin from './Components/Login-Admin';
 import FacultyLogin from './Components/FacultyLogin';
-import Login from './Components/Login';
 import Admin_landingPage from './Components/Admin/Admin_landingPage';
 
 // Admin Registration route
@@ -18,6 +17,8 @@ import Gym from './Components/Admin/Registration-pages/Gym-registration';
 import Guard from './Components/Admin/Registration-pages/Guard-registration';
 
 // Admin Attendance route
+import AttendancePage from './Components/Admin/Attendance/Attendancen-page';
+
 import StudentCp1 from './Components/Admin/Student-Page/StudentCP-1D';
 import StudentCp2 from './Components/Admin/Student-Page/StudentCP-2D';
 import StudentCp3 from './Components/Admin/Student-Page/StudentCP-3D';
@@ -55,8 +56,6 @@ import GuardReport from './Components/Faculty/Guard/Guard_Report';
 import RegistrarLandingPage from './Components/Faculty/Registar/Registrar_landingPage';
 import RegistrarReport from './Components/Faculty/Registar/RegistrarReport';
 
-import TablePractice from './Components/Practice/Table';
-
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -64,30 +63,31 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} /> */}
-
         <Route path="/login/admin" element={<AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/login" element={<FacultyLogin setIsLoggedIn={setIsLoggedIn} />} />
 
         // Admin Route
-        <Route path="/dashboard" element={isLoggedIn ? <Admin_landingPage /> : <Navigate to="/login" />} />
+        <Route path="/dashboard" element={isLoggedIn ? <Admin_landingPage /> : <Navigate to="/login/admin" />} />
 
-        <Route path="/Registration/Teacher" element={isLoggedIn ? <Teacher /> : <Navigate to="/login" />} />
-        <Route path="/Registration/Registrar" element={isLoggedIn ? <Registrar /> : <Navigate to="/login" />} />
-        <Route path="/Registration/Librarian" element={isLoggedIn ? <Librarian /> : <Navigate to="/login" />} />
-        <Route path="/Registration/Gym" element={isLoggedIn ? <Gym /> : <Navigate to="/login" />} />
-        <Route path="/Registration/Guard" element={isLoggedIn ? <Guard /> : <Navigate to="/login" />} />
+        <Route path="/Registration/Teacher" element={isLoggedIn ? <Teacher /> : <Navigate to="/login/admin" />} />
+        <Route path="/Registration/Registrar" element={isLoggedIn ? <Registrar /> : <Navigate to="/login/admin" />} />
+        <Route path="/Registration/Librarian" element={isLoggedIn ? <Librarian /> : <Navigate to="/login/admin" />} />
+        <Route path="/Registration/Gym" element={isLoggedIn ? <Gym /> : <Navigate to="/login/admin" />} />
+        <Route path="/Registration/Guard" element={isLoggedIn ? <Guard /> : <Navigate to="/login/admin" />} />
 
-        <Route path="/Attendance/BTVTEICT-CP-1D" element={isLoggedIn ? <StudentCp1 /> : <Navigate to="/login" />} />
-        <Route path="/Attendance/BTVTEICT-CP-2D" element={isLoggedIn ? <StudentCp2 /> : <Navigate to="/login" />} />
-        <Route path="/Attendance/BTVTEICT-CP-3D" element={isLoggedIn ? <StudentCp3 /> : <Navigate to="/login" />} />
-        <Route path="/Attendance/BTVTEICT-CP-4D" element={isLoggedIn ? <StudentCp4 /> : <Navigate to="/login" />} />
+        // Attendance route AttendancePage
+        <Route path="/Attendance" element={isLoggedIn ? <AttendancePage /> : <Navigate to="/login/admin" />} />
+
+        <Route path="/Attendance/BTVTEICT-CP-1D" element={isLoggedIn ? <StudentCp1 /> : <Navigate to="/login/admin" />} />
+        <Route path="/Attendance/BTVTEICT-CP-2D" element={isLoggedIn ? <StudentCp2 /> : <Navigate to="/login/admin" />} />
+        <Route path="/Attendance/BTVTEICT-CP-3D" element={isLoggedIn ? <StudentCp3 /> : <Navigate to="/login/admin" />} />
+        <Route path="/Attendance/BTVTEICT-CP-4D" element={isLoggedIn ? <StudentCp4 /> : <Navigate to="/login/admin" />} />
 
         // Admin Report Route 
-        <Route path="/Report/Library" element={isLoggedIn ? <AdminLibraryReport /> : <Navigate to="/login" />} />
-        <Route path="/Report/Gym" element={isLoggedIn ? <AdminGymReport /> : <Navigate to="/login" />} />
-        <Route path="/Report/Registrar" element={isLoggedIn ? <AdminRegistrarReport /> : <Navigate to="/login" />} />
-        <Route path="/Report/Gatepass" element={isLoggedIn ? <AdminGatepassReport /> : <Navigate to="/login" />} />
+        <Route path="/Report/Library" element={isLoggedIn ? <AdminLibraryReport /> : <Navigate to="/login/admin" />} />
+        <Route path="/Report/Gym" element={isLoggedIn ? <AdminGymReport /> : <Navigate to="/login/admin" />} />
+        <Route path="/Report/Registrar" element={isLoggedIn ? <AdminRegistrarReport /> : <Navigate to="/login/admin" />} />
+        <Route path="/Report/Gatepass" element={isLoggedIn ? <AdminGatepassReport /> : <Navigate to="/login/admin" />} />
 
         // Teacher Route
         <Route path="/dashboard/Teacher" element={isLoggedIn ? <Teacher_landingPage /> : <Navigate to="/login" />} />

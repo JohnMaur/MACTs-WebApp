@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Layout } from 'antd';
 import userImg from '../../../assets/user.png';
-import exampleImage from "../../../assets/example-image.webp";
 import socketIOClient from 'socket.io-client';
 
 const gatepassSERVER = 'http://localhost:3131';
