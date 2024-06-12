@@ -44,8 +44,8 @@ const RegistrarSidebar = ({ collapsed }) => {
         <Menu.Item key="/dashboard/Registrar" icon={<AppstoreOutlined />}>
           <Link to="/dashboard/Registrar">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="/Registrar/Report" icon={<SolutionOutlined />}>
-          <Link to="/Registrar/Report">Report</Link>
+        <Menu.Item key="/Facility/Registrar/Report" icon={<SolutionOutlined />}>
+          <Link to="/Facility/Registrar/Report">Report</Link>
         </Menu.Item>
 
         <Menu.Item key="/login" icon={<LogoutOutlined />}>

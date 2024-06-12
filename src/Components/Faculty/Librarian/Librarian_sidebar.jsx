@@ -45,8 +45,8 @@ const Librarian_Sidebar = ({ collapsed }) => {
         <Menu.Item key="/dashboard/Library" icon={<AppstoreOutlined />}>
           <Link to="/dashboard/Library">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="/Library/Report" icon={<SolutionOutlined />}>
-          <Link to="/Library/Report">Report</Link>
+        <Menu.Item key="/Facility/Library/Report/" icon={<SolutionOutlined />}>
+          <Link to="/Facility/Library/Report/">Report</Link>
         </Menu.Item>
 
         <Menu.Item key="/login" icon={<LogoutOutlined />}>

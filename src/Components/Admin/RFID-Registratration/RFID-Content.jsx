@@ -103,7 +103,7 @@ const RFID_Content = ({ borderRadiusLG }) => {
         </div>
 
         <div className=" flex-1 md:h-5/6 my-10 mx-5 mr-10 flex">
-          <div className="flex-1 h-[95%] mx-8 bg-slate-50 shadow-md p-5 px-10 rounded-lg> ">
+          <div className="flex-1 md:overflow-y-auto h-[95%] mx-8 bg-slate-50 shadow-md p-5 px-10 rounded-lg> ">
             <p className='text-2xl'>Name: <span className='font-bold'>{studentInfo.length > 0 ? `${studentInfo[0].studentInfo_first_name} ${studentInfo[0].studentInfo_middle_name} ${studentInfo[0].studentInfo_last_name}` : ''}</span></p>
             <p className='text-2xl'>TUPT ID: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_tuptId : ''}</span></p>
             <p className='text-2xl'>Course: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_course : ''}</span></p>

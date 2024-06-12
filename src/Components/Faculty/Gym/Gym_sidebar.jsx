@@ -44,8 +44,8 @@ const GymSidebar = ({ collapsed }) => {
         <Menu.Item key="/dashboard/Gym" icon={<AppstoreOutlined />}>
           <Link to="/dashboard/Gym">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="/Gym/Report" icon={<SolutionOutlined />}>
-          <Link to="/Gym/Report">Report</Link>
+        <Menu.Item key="/Facility/Gym/Report" icon={<SolutionOutlined />}>
+          <Link to="/Facility/Gym/Report">Report</Link>
         </Menu.Item>
 
         <Menu.Item key="/login" icon={<LogoutOutlined />}>

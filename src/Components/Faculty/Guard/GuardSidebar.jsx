@@ -44,8 +44,8 @@ const GuardSidebar = ({ collapsed }) => {
         <Menu.Item key="/dashboard/Gatepass" icon={<AppstoreOutlined />}>
           <Link to="/dashboard/Gatepass">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="/Gatepass/Report" icon={<SolutionOutlined />}>
-          <Link to="/Gatepass/Report">Report</Link>
+        <Menu.Item key="/Facility/Gatepass/Report" icon={<SolutionOutlined />}>
+          <Link to="/Facility/Gatepass/Report">Report</Link>
         </Menu.Item>
 
         <Menu.Item key="/login" icon={<LogoutOutlined />}>

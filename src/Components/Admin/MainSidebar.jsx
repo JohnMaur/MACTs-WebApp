@@ -46,7 +46,8 @@ const Sidebar = ({ collapsed }) => {
         <Menu.Item key="/dashboard" icon={<AppstoreOutlined />}>
           <Link to="/dashboard">Dashboard</Link>
         </Menu.Item>
-        <SubMenu key="/Registration" icon={<UserAddOutlined />} title="Faculty Registration">
+
+        <SubMenu key="Registration" icon={<UserAddOutlined />} title="Faculty Registration">
           <Menu.Item key="/Registration/Teacher">
             <Link to="/Registration/Teacher">Teacher</Link>
           </Menu.Item>
@@ -65,17 +66,17 @@ const Sidebar = ({ collapsed }) => {
         </SubMenu>
 
         <SubMenu key="Report" icon={<FileDoneOutlined />} title="Report">
-          <Menu.Item key="/Report/Gatepass">
-            <Link to="/Report/Gatepass">Entrance/Gate</Link>
+          <Menu.Item key="/Gatepass/Report">
+            <Link to="/Gatepass/Report">Entrance/Gate</Link>
           </Menu.Item>
-          <Menu.Item key="/Report/Registrar">
-            <Link to="/Report/Registrar">Registrar</Link>
+          <Menu.Item key="/Registrar/Report">
+            <Link to="/Registrar/Report">Registrar</Link>
           </Menu.Item>
-          <Menu.Item key="/Report/Gym">
-            <Link to="/Report/Gym">Gym</Link>
+          <Menu.Item key="/Gym/Report">
+            <Link to="/Gym/Report">Gym</Link>
           </Menu.Item>
-          <Menu.Item key="/Report/Library">
-            <Link to="/Report/Library">Library</Link>
+          <Menu.Item key="/Library/Report">
+            <Link to="/Library/Report">Library</Link>
           </Menu.Item>
         </SubMenu>
 

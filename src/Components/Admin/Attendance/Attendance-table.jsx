@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   closestCenter,
   DndContext,
-  DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
@@ -17,6 +16,7 @@ import {
 import { SearchOutlined } from '@ant-design/icons';
 import { Table } from 'antd';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const DragIndexContext = createContext({
   active: -1,
@@ -46,7 +46,7 @@ const dragActiveStyle = (dragState, id) => {
 
 const TableBodyCell = (props) => {
   const dragState = useContext(DragIndexContext);
-  return <td {...props} style={{ ...props.style, ...dragActiveStyle(dragState, props.id) }} />;
+  return <td {...props} style={{ ...props.style, ...dragActiveStyle(dragState, props.id) }}>{props.children}</td>;
 };
 
 const TableHeaderCell = (props) => {
@@ -57,7 +57,7 @@ const TableHeaderCell = (props) => {
   const style = {
     ...props.style,
     cursor: 'move',
-    zIndex: isDragging ? 9999 : 1, // Adjusting z-index
+    zIndex: isDragging ? 9999 : 1,
     ...(isDragging
       ? {
           position: 'relative',
@@ -77,34 +77,27 @@ const Modal = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     if (isVisible) {
-      // Generate random code
       const randomCode = Math.random().toString(36).slice(2);
       setCode(randomCode);
-      // Set current date
       const currentDate = new Date().toLocaleString();
       setDate(currentDate);
     }
   }, [isVisible]);
 
   const handleAddAttendance = () => {
-    // Prepare attendance data
     const attendanceData = {
       attendance_description: description,
       attendance_code: code,
       attendance_date: date,
     };
 
-    // Send POST request to your backend API to insert attendance data
     axios.post('http://localhost:2526/add-Attendance', attendanceData)
       .then(response => {
-        // Handle success, maybe show a message to the user
         console.log('Attendance added successfully');
-        // Close the modal
         onClose();
         alert('Attendance added successfully');
       })
       .catch(error => {
-        // Handle error, maybe show an error message to the user
         console.error('Error adding attendance:', error);
       });
   };
@@ -112,7 +105,7 @@ const Modal = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-[10000]"> {/* Updated z-index */}
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-[10000]">
       <div className="bg-white rounded-lg p-6 w-96">
         <h2 className="text-xl font-bold mb-4">Add Attendance</h2>
         <div className="mb-4">
@@ -162,6 +155,7 @@ const Modal = ({ isVisible, onClose }) => {
 };
 
 const AttendanceTable = () => {
+  const navigate = useNavigate();
   const [dragIndex, setDragIndex] = useState({
     active: -1,
     over: -1,
@@ -170,14 +164,17 @@ const AttendanceTable = () => {
     {
       title: 'Attendance Description',
       dataIndex: 'attendance_description',
+      key: 'attendance_description',
     },
     {
       title: 'Code',
       dataIndex: 'attendance_code',
+      key: 'attendance_code',
     },
     {
       title: 'Date',
       dataIndex: 'attendance_date',
+      key: 'attendance_date',
     },
   ]);
   const [searchText, setSearchText] = useState('');
@@ -201,16 +198,14 @@ const AttendanceTable = () => {
         console.error('Error fetching attendance data:', error);
       }
     };
-  
+
     fetchData();
-  }, []); // Empty dependency array means this effect will only run once on component mount
+  }, []);
 
   useEffect(() => {
-    // Filter data based on search text
     const filtered = data.filter((item) =>
       Object.values(item).some((value) => value.toLowerCase().includes(searchText.toLowerCase()))
     );
-    // Reverse the filtered array to ensure the latest data is displayed first
     setFilteredData(filtered.reverse());
   }, [searchText, data]);
 
@@ -255,45 +250,60 @@ const AttendanceTable = () => {
     position: ['bottomCenter'],
   };
 
+  const handleRowClick = (record) => {
+    navigate(`/attendance/report/${record.attendance_code}`);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
         <button
-          className="text-white bg-blue-500 hover:bg-blue-700 active:opacity-40 transition-all font-bold py-2 px-10 rounded"
+          className="text-white bg-blue-500 hover:bg-blue-700 active:opacity-40 transition-all font-bold py-2 px-4 rounded"
           onClick={() => setIsModalVisible(true)}
         >
-          ADD
+          Add Attendance
         </button>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="rounded-sm shadow-md border-[1px] border-solid border-gray-500 focus:outline-none">
-            <input
-              className="p-2 px-5 placeholder-gray-500"
-              type="text"
-              placeholder="Search..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            <button className="p-2 px-3 border-solid border-l-[1px] border-gray-500" onClick={handleSearch}>
-              <SearchOutlined />
-            </button>
-          </div>
+        <div className="flex items-center">
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring focus:border-blue-300"
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-md"
+            onClick={handleSearch}
+          >
+            <SearchOutlined />
+          </button>
         </div>
       </div>
-
       <DndContext
         sensors={sensors}
-        modifiers={[restrictToHorizontalAxis]}
+        collisionDetection={closestCenter}
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
-        collisionDetection={closestCenter}
+        modifiers={[restrictToHorizontalAxis]}
       >
-        <SortableContext items={columns.map((i) => i.dataIndex)} strategy={horizontalListSortingStrategy}>
-          <DragIndexContext.Provider value={dragIndex}>
+        <DragIndexContext.Provider value={dragIndex}>
+          <SortableContext items={columns.map((i) => i.dataIndex)} strategy={horizontalListSortingStrategy}>
             <Table
-              rowKey="key"
-              columns={columns}
               dataSource={filteredData}
+              columns={columns.map((col) => ({
+                ...col,
+                onCell: (record) => ({
+                  onClick: () => handleRowClick(record),
+                  style: { cursor: 'pointer' },
+                }),
+                onHeaderCell: (col) => ({
+                  id: col.dataIndex,
+                }),
+                title: col.title,
+                dataIndex: col.dataIndex,
+                key: col.dataIndex,
+              }))}
+              pagination={pagination}
               components={{
                 header: {
                   cell: TableHeaderCell,
@@ -302,22 +312,10 @@ const AttendanceTable = () => {
                   cell: TableBodyCell,
                 },
               }}
-              pagination={pagination}
             />
-          </DragIndexContext.Provider>
-        </SortableContext>
-        <DragOverlay>
-          <th
-            style={{
-              backgroundColor: 'gray',
-              padding: 16,
-            }}
-          >
-            {columns[columns.findIndex((i) => i.dataIndex === dragIndex.active)]?.title}
-          </th>
-        </DragOverlay>
+          </SortableContext>
+        </DragIndexContext.Provider>
       </DndContext>
-      
       <Modal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
     </div>
   );
