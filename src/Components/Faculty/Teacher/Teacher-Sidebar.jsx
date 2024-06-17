@@ -4,11 +4,11 @@ import { IdcardOutlined, SolutionOutlined, LogoutOutlined, AppstoreOutlined } fr
 import { Link, useLocation } from 'react-router-dom';
 
 const { Sider } = Layout;
-const { SubMenu } = Menu;
 
 const TeacherSidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
+  const userId = location.pathname.split('/')[3]; // Extract the userId from the path
 
   // Function to handle submenu open keys
   const handleOpenChange = (keys) => {
@@ -26,13 +26,16 @@ const TeacherSidebar = ({ collapsed }) => {
 
   return (
     <Sider
-      trigger={null} collapsible collapsed={collapsed}
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
       width={250}
       style={{
         overflow: 'auto',
         height: '100vh',
         left: 0,
-      }}>
+      }}
+    >
       <div className="demo-logo-vertical" />
       <Menu
         theme="dark"
@@ -42,27 +45,17 @@ const TeacherSidebar = ({ collapsed }) => {
         openKeys={openKeys} // Set openKeys explicitly
         onOpenChange={handleOpenChange}
       >
-        <Menu.Item key="/dashboard/Teacher" icon={<AppstoreOutlined />}>
-          <Link to="/dashboard/Teacher">Dashboard</Link>
+        <Menu.Item key={`/dashboard/Teacher/${userId}`} icon={<AppstoreOutlined />}>
+          <Link to={`/dashboard/Teacher/${userId}`}>Dashboard</Link>
         </Menu.Item>
 
-        <SubMenu key="Attendance" title="Attendance" icon={<SolutionOutlined />}>
-        <Menu.Item key="/BTVTEICT-CP-1D" icon={<SolutionOutlined />}>
-            <Link to="/BTVTEICT-CP-1D" icon={<SolutionOutlined />}>BTVTEICT-CP-1D</Link>
-          </Menu.Item>
-          <Menu.Item key="/BTVTEICT-CP-2D" icon={<SolutionOutlined />}>
-            <Link to="/BTVTEICT-CP-2D">BTVTEICT-CP-2D</Link>
-          </Menu.Item>
-          <Menu.Item key="/BTVTEICT-CP-3D" icon={<SolutionOutlined />}>
-            <Link to="/BTVTEICT-CP-3D">BTVTEICT-CP-3D</Link>
-          </Menu.Item>
-          <Menu.Item key="/BTVTEICT-CP-4D" icon={<SolutionOutlined />}>
-            <Link to="/BTVTEICT-CP-4D">BTVTEICT-CP-4D</Link>
-          </Menu.Item>
-        </SubMenu>
-        <Menu.Item key="/Student/RFID/Registration" icon={<IdcardOutlined />}>
-          <Link to="/Student/RFID/Registration">RFID Registration</Link>
+        <Menu.Item key={`/Add/Attendance/${userId}`} icon={<SolutionOutlined />}>
+          <Link to={`/Add/Attendance/${userId}`}>ADD Attendance</Link>
         </Menu.Item>
+
+        {/* <Menu.Item key={`/RFID_Registration/${userId}`} icon={<IdcardOutlined />}>
+          <Link to={`/RFID_Registration/${userId}`}>RFID Registration</Link>
+        </Menu.Item> */}
 
         <Menu.Item key="/login" icon={<LogoutOutlined />}>
           <Link to="/login">Log out</Link>

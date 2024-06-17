@@ -1,8 +1,5 @@
-// FacultyLogin.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../Stylesheet/login.css';
-import mactsLogo from "../assets/Logo_blue.png"
 import { useNavigate } from 'react-router-dom';
 
 function FacultyLogin({ setIsLoggedIn }) {
@@ -18,19 +15,19 @@ function FacultyLogin({ setIsLoggedIn }) {
         faculty_pass: facultyPass,
       });
       if (response.status === 200) {
-        const userType = response.data.userType;
-        if (userType === 'librarian') {
-          navigate('/dashboard/Library');
-        } else if (userType === 'teacher') {
-          navigate('/dashboard/Teacher');
-        } else if (userType === 'gym') {
-          navigate('/dashboard/Gym');
-        } else if (userType === 'guard') {
-          navigate('/dashboard/Gatepass');
-        } else if (userType === 'registrar') {
-          navigate('/dashboard/Registrar');
-        }
+        const { userType, userId } = response.data;
         setIsLoggedIn(true);
+        if (userType === 'teacher') {
+          navigate(`/dashboard/Teacher/${userId}`);
+        } else if (userType === 'librarian') {
+          navigate(`/dashboard/Library`);
+        } else if (userType === 'gym') {
+          navigate(`/dashboard/Gym`);
+        } else if (userType === 'guard') {
+          navigate(`/dashboard/Gatepass`);
+        } else if (userType === 'registrar') {
+          navigate(`/dashboard/Registrar`);
+        }
       } else {
         alert('Invalid username or password');
       }

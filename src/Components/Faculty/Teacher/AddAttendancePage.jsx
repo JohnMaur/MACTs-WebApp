@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { Layout } from 'antd';
+import { Layout, theme } from 'antd';
 import CustomHeader from '../../Admin/Header';
 import TeacherSidebar from './Teacher-Sidebar';
-import TeacherContent from './Teacher-content';
+import FacultyTeacherContent from './Attendance-tableContent';
 
-const Teacher_landingPage = () => {
+const FacultyAddAttendancePage = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <TeacherSidebar collapsed={collapsed} />
       <Layout style={{ maxHeight: '100vh' }}>
         <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
-        <TeacherContent/>
+        <FacultyTeacherContent colorBgContainer={colorBgContainer} borderRadiusLG={borderRadiusLG} />
       </Layout>
     </Layout>
   );
 };
 
-export default Teacher_landingPage;
+export default FacultyAddAttendancePage;

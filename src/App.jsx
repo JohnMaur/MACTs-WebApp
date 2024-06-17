@@ -26,6 +26,7 @@ import StudentCp3 from './Components/Admin/Student-Page/StudentCP-3D';
 import StudentCp4 from './Components/Admin/Student-Page/StudentCP-4D';
 
 import RFID_page from './Components/Admin/RFID-Registratration/RFID-Page';
+import DevicePageRegistration from './Components/Admin/Device-Registration/Device-page';
 
 // Admin Report Route
 import AdminLibraryReport from './Components/Admin/Report/Library/Library-page';
@@ -35,10 +36,8 @@ import AdminGatepassReport from './Components/Admin/Report/Gatepass/Gatepass-pag
 
 // Teacher import
 import Teacher_landingPage from './Components/Faculty/Teacher/Teacher-landingPage';
-import Cp1 from './Components/Faculty/Teacher/Attendance/Cp1';
-import Cp2 from './Components/Faculty/Teacher/Attendance/Cp2';
-import Cp3 from './Components/Faculty/Teacher/Attendance/Cp3';
-import Cp4 from './Components/Faculty/Teacher/Attendance/Cp4';
+import FacultyAddAttendancePage from './Components/Faculty/Teacher/AddAttendancePage';
+import FacultyAttendancePageReport from './Components/Faculty/Teacher/Report/Attendance-page-report';
 import Teacher_RFID_page from './Components/Faculty/Teacher/Teacher-RFID-Registration';
 
 // Librarian import
@@ -92,13 +91,11 @@ function App() {
         <Route path="/Gatepass/Report" element={isLoggedIn ? <AdminGatepassReport /> : <Navigate to="/login/admin" />} />
 
         // Teacher Route
-        <Route path="/dashboard/Teacher" element={isLoggedIn ? <Teacher_landingPage /> : <Navigate to="/login" />} />
+        <Route path="/dashboard/Teacher/:userId" element={isLoggedIn ? <Teacher_landingPage /> : <Navigate to="/login" />} />
 
-        <Route path="/BTVTEICT-CP-1D" element={isLoggedIn ? <Cp1 /> : <Navigate to="/login" />} />
-        <Route path="/BTVTEICT-CP-2D" element={isLoggedIn ? <Cp2 /> : <Navigate to="/login" />} />
-        <Route path="/BTVTEICT-CP-3D" element={isLoggedIn ? <Cp3 /> : <Navigate to="/login" />} />
-        <Route path="/BTVTEICT-CP-4D" element={isLoggedIn ? <Cp4 /> : <Navigate to="/login" />} />
-        <Route path="/Student/RFID/Registration" element={isLoggedIn ? <Teacher_RFID_page /> : <Navigate to="/login" />} />
+        <Route path="/Add/Attendance/:userId" element={isLoggedIn ? <FacultyAddAttendancePage /> : <Navigate to="/login" />} />
+        <Route path="/Faculty/attendance/report/:attendance_code" element={isLoggedIn ? <FacultyAttendancePageReport /> : <Navigate to="/login/admin" />} />  
+        {/* <Route path="/RFID_Registration/:userId" element={isLoggedIn ? <Teacher_RFID_page /> : <Navigate to="/login" />} /> */}
 
         // Librarian Route
         <Route path="/dashboard/Library" element={isLoggedIn ? <Librarian_landingPage /> : <Navigate to="/login" />} />
@@ -116,7 +113,8 @@ function App() {
         <Route path="/dashboard/Registrar" element={isLoggedIn ? <RegistrarLandingPage /> : <Navigate to="/login" />} />
         <Route path="/Facility/Registrar/Report" element={isLoggedIn ? <RegistrarReport /> : <Navigate to="/login" />} />
 
-        <Route path="/RFID/Registration" element={isLoggedIn ? <RFID_page /> : <Navigate to="/login" />} />
+        <Route path="/Registration/RFID" element={isLoggedIn ? <RFID_page /> : <Navigate to="/login/admin" />} />
+        <Route path="/Registration/Device" element={isLoggedIn ? <DevicePageRegistration /> : <Navigate to="/login/admin" />} />
 
       </Routes>
     </Router>

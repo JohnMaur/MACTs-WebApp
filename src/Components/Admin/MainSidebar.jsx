@@ -83,25 +83,15 @@ const Sidebar = ({ collapsed }) => {
         <Menu.Item key="/Attendance" icon={<SolutionOutlined />}>
           <Link to="/Attendance">Attendance</Link>
         </Menu.Item>
-        {/* <SubMenu key="Attendance" icon={<SolutionOutlined />} title="Attendance">
-          <Menu.Item key="/Attendance/BTVTEICT-CP-1D">
-            <Link to="/Attendance/BTVTEICT-CP-1D">BTVTEICT-CP-1D</Link>
-          </Menu.Item>
-          <Menu.Item key="/Attendance/BTVTEICT-CP-2D">
-            <Link to="/Attendance/BTVTEICT-CP-2D">BTVTEICT-CP-2D</Link>
-          </Menu.Item>
-          <Menu.Item key="/Attendance/BTVTEICT-CP-3D">
-            <Link to="/Attendance/BTVTEICT-CP-3D">BTVTEICT-CP-3D</Link>
-          </Menu.Item>
-          <Menu.Item key="/Attendance/BTVTEICT-CP-4D">
-            <Link to="/Attendance/BTVTEICT-CP-4D">BTVTEICT-CP-4D</Link>
-          </Menu.Item>
-        </SubMenu> */}
 
-
-        <Menu.Item key="/RFID/Registration" icon={<IdcardOutlined />}>
-          <Link to="/RFID/Registration">RFID Registration</Link>
+        <Menu.Item key="/Registration/RFID" icon={<IdcardOutlined />}>
+          <Link to="/Registration/RFID">RFID Registration</Link>
         </Menu.Item>
+
+        <Menu.Item key="/Registration/Device" icon={<IdcardOutlined />}>
+          <Link to="/Registration/Device">Device Registration</Link>
+        </Menu.Item>
+
         <Menu.Item key="/login" icon={<LogoutOutlined />}>
           <Link to="/login/admin">Log out</Link>
         </Menu.Item>

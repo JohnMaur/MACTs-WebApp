@@ -16,7 +16,7 @@ import {
 import { SearchOutlined } from '@ant-design/icons';
 import { Table } from 'antd';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const DragIndexContext = createContext({
   active: -1,
@@ -70,7 +70,7 @@ const TableHeaderCell = (props) => {
   return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
 };
 
-const Modal = ({ isVisible, onClose, addAttendance }) => {
+const Modal = ({ isVisible, onClose, addAttendance, userId }) => {
   const [description, setDescription] = useState('');
   const [code, setCode] = useState('');
   const [date, setDate] = useState('');
@@ -89,9 +89,10 @@ const Modal = ({ isVisible, onClose, addAttendance }) => {
       attendance_description: description,
       attendance_code: code,
       attendance_date: date,
+      userId: userId, // Include userId
     };
 
-    axios.post('http://localhost:2526/add-Attendance', attendanceData)
+    axios.post('http://localhost:2526/Facultyadd-Attendance', attendanceData)
       .then(response => {
         console.log('Attendance added successfully');
         addAttendance(attendanceData); // Update attendance data in parent
@@ -158,7 +159,9 @@ const Modal = ({ isVisible, onClose, addAttendance }) => {
   );
 };
 
-const AttendanceTable = () => {
+const FacultyAttendanceTable = () => {
+  const { userId } = useParams();
+
   const navigate = useNavigate();
   const [dragIndex, setDragIndex] = useState({
     active: -1,
@@ -189,7 +192,7 @@ const AttendanceTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:2526/attendance');
+        const response = await axios.get(`http://localhost:2526/Facultyattendance/${userId}`);
         const responseData = response.data;
         const transformedData = responseData.map((item) => ({
           key: item.attendance_id.toString(),
@@ -204,7 +207,7 @@ const AttendanceTable = () => {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     setFilteredData(
@@ -258,7 +261,7 @@ const AttendanceTable = () => {
   };
 
   const handleRowClick = (record) => {
-    navigate(`/attendance/report/${record.attendance_code}`);
+    navigate(`/Faculty/attendance/report/${record.attendance_code}`);
   };
 
   const addAttendance = (attendanceData) => {
@@ -334,9 +337,9 @@ const AttendanceTable = () => {
           </SortableContext>
         </DragIndexContext.Provider>
       </DndContext>
-      <Modal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} addAttendance={addAttendance} />
+      <Modal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} addAttendance={addAttendance} userId={userId} />
     </div>
   );
 };
 
-export default AttendanceTable;
+export default FacultyAttendanceTable;

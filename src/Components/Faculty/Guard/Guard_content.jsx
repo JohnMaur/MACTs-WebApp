@@ -5,14 +5,14 @@ import socketIOClient from 'socket.io-client';
 
 const gatepassSERVER = 'http://localhost:3131';
 const studentInfoServerUrl = 'http://localhost:2526';
-const studentDeviceServerUrl = 'http://localhost:2526/studentDevice'; // Add this URL
+const studentDeviceServerUrl = 'http://localhost:2526/studentDevice';
 
 const { Content: AntdContent } = Layout;
 
 const GuardContent = () => {
   const [currentTagData, setCurrentTagData] = useState('');
   const [currentStudentInfo, setCurrentStudentInfo] = useState(null);
-  const [currentDeviceInfo, setCurrentDeviceInfo] = useState(null); // Add device info state
+  const [currentDeviceInfo, setCurrentDeviceInfo] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
   const timeoutRef = useRef(null);
 
@@ -21,11 +21,11 @@ const GuardContent = () => {
 
     socket.on('tagData', receivedData => {
       console.log('Received tag data:', receivedData);
-      isValidTagData(receivedData).then((isValid) => {
+      fetchStudentDeviceInfo(receivedData).then((isValid) => {
         if (isValid) {
           setCurrentTagData(receivedData);
           setCurrentTime(new Date().toLocaleString());
-          fetchStudentInfo(receivedData);
+          fetchStudentInfo(isValid.user_id);
         }
       });
     });
@@ -38,27 +38,33 @@ const GuardContent = () => {
     };
   }, []);
 
-  const isValidTagData = async (tagData) => {
+  const fetchStudentDeviceInfo = async (tagData) => {
     try {
-      const response = await fetch(`${studentInfoServerUrl}/studentinfo`);
-      const data = await response.json();
-      const isValid = data.some(student => student.tagValue === tagData);
-      return isValid;
+      const response = await fetch(studentDeviceServerUrl);
+      const deviceData = await response.json();
+      const matchedDevice = deviceData.find(device => device.deviceRegistration === tagData);
+
+      if (matchedDevice) {
+        setCurrentDeviceInfo(matchedDevice);
+        return matchedDevice;
+      } else {
+        setCurrentDeviceInfo(null);
+        return false;
+      }
     } catch (error) {
-      console.error('Error fetching student information:', error);
+      console.error('Error fetching device information:', error);
       return false;
     }
   };
 
-  const fetchStudentInfo = async (tagData) => {
+  const fetchStudentInfo = async (userId) => {
     try {
       const response = await fetch(`${studentInfoServerUrl}/studentinfo`);
       const data = await response.json();
-      const matchedStudent = data.find(student => student.tagValue === tagData);
+      const matchedStudent = data.find(student => student.user_id === userId);
 
       if (matchedStudent) {
         setCurrentStudentInfo(matchedStudent);
-        fetchDeviceInfo(matchedStudent.user_id);
 
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
@@ -70,26 +76,9 @@ const GuardContent = () => {
         }, 15000);
       } else {
         setCurrentStudentInfo(null);
-        setCurrentDeviceInfo(null);
       }
     } catch (error) {
       console.error('Error fetching student information:', error);
-    }
-  };
-
-  const fetchDeviceInfo = async (userId) => {
-    try {
-      const response = await fetch(`${studentDeviceServerUrl}`);
-      const data = await response.json();
-      const matchedDevice = data.find(device => device.user_id === userId);
-
-      if (matchedDevice) {
-        setCurrentDeviceInfo(matchedDevice);
-      } else {
-        setCurrentDeviceInfo(null);
-      }
-    } catch (error) {
-      console.error('Error fetching device information:', error);
     }
   };
 

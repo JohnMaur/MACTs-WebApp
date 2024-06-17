@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Layout, theme } from 'antd';
-import CustomHeader from '../../Admin/Header';
-import GuardSidebar from './GuardSidebar';
-import GuardContent from './Guard_content';
+import MainSidebar from '../MainSidebar';
+import CustomHeader from '../Header';
+import GatepassContent from './deviceRegistrationContent';
 
-const GuardLandingPage = () => {
+const DevicePageRegistration = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -12,13 +12,13 @@ const GuardLandingPage = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <GuardSidebar collapsed={collapsed} />
+      <MainSidebar collapsed={collapsed} />
       <Layout style={{ maxHeight: '100vh' }}>
         <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
-        <GuardContent colorBgContainer={colorBgContainer} borderRadiusLG={borderRadiusLG} />
+        <GatepassContent colorBgContainer={colorBgContainer} borderRadiusLG={borderRadiusLG} />
       </Layout>
     </Layout>
   );
 };
 
-export default GuardLandingPage;
+export default DevicePageRegistration;

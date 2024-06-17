@@ -51,7 +51,7 @@ const RFID_Content = ({ borderRadiusLG }) => {
   
       // Make a POST request to insert the RFID tag value into the database
       const response = await axios.post(`http://localhost:2526/rfidRegistration/${searchValue}`, {
-        tagValue: rfidTagValue
+        deviceCode: rfidTagValue
       });
 
       if (response.data.error === 'Duplicate tagValue') {
