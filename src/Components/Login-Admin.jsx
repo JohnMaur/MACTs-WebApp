@@ -1,13 +1,21 @@
 // AdminLogin.jsx
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import '../Stylesheet/login.css';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
-function AdminLogin({ setIsLoggedIn }) {
+function AdminLogin() {
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
+  const { isLoggedIn, login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/dashboard');
+    }
+  }, [isLoggedIn, navigate]);
 
   const adminLogin = async (event) => {
     event.preventDefault();
@@ -17,17 +25,14 @@ function AdminLogin({ setIsLoggedIn }) {
         admin_password: adminPassword,
       });
       if (response.status === 200) {
-        setIsLoggedIn(true);
-        navigate('/dashboard'); // Navigate to admin page upon successful login
+        const { token } = response.data;
+        login(token); // Use the login function from AuthContext
       } else {
         alert('Invalid username or password');
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert('Invalid username or password');
-      } else {
-        console.error('Error logging in:', error);
-      }
+      console.error('Error logging in:', error);
+      alert('Error logging in. Please try again.');
     }
   };
 

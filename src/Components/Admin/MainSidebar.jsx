@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Menu, Layout } from 'antd';
-import { IdcardOutlined, UserAddOutlined, SolutionOutlined, LogoutOutlined, FileDoneOutlined, AppstoreOutlined, } from '@ant-design/icons';
+import { IdcardOutlined, UserAddOutlined, SolutionOutlined, LogoutOutlined, FileDoneOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -9,6 +10,7 @@ const { SubMenu } = Menu;
 const Sidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
+  const { logout } = useContext(AuthContext);
 
   // Function to handle submenu open keys
   const handleOpenChange = (keys) => {
@@ -24,23 +26,29 @@ const Sidebar = ({ collapsed }) => {
     setOpenKeys(submenuKey ? [submenuKey] : []);
   }, [location.pathname]);
 
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <Sider
-      trigger={null} collapsible collapsed={collapsed}
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
       width={250}
       style={{
         overflow: 'auto',
         height: '100vh',
         left: 0,
-      }}>
+      }}
+    >
       <div className="demo-logo-vertical" />
       <Menu
         theme="dark"
         mode="inline"
         defaultSelectedKeys={['1']}
         selectedKeys={[location.pathname]}
-        openKeys={openKeys} 
+        openKeys={openKeys}
         onOpenChange={handleOpenChange}
       >
         <Menu.Item key="/dashboard" icon={<AppstoreOutlined />}>
@@ -92,8 +100,8 @@ const Sidebar = ({ collapsed }) => {
           <Link to="/Registration/Device">Device Registration</Link>
         </Menu.Item>
 
-        <Menu.Item key="/login" icon={<LogoutOutlined />}>
-          <Link to="/login/admin">Log out</Link>
+        <Menu.Item key="/logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+          Log out
         </Menu.Item>
       </Menu>
     </Sider>
