@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
-function FacultyLogin({ setIsLoggedIn }) {
+function FacultyLogin() {
   const [facultyUser, setFacultyUser] = useState('');
   const [facultyPass, setFacultyPass] = useState('');
+  const { isLoggedIn, login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // handle redirection based on user type if needed
+    }
+  }, [isLoggedIn, navigate]);
 
   const facultyLogin = async (event) => {
     event.preventDefault();
@@ -15,8 +23,8 @@ function FacultyLogin({ setIsLoggedIn }) {
         faculty_pass: facultyPass,
       });
       if (response.status === 200) {
-        const { userType, userId } = response.data;
-        setIsLoggedIn(true);
+        const { userType, userId, token } = response.data;
+        login(token, userType);
         if (userType === 'teacher') {
           navigate(`/dashboard/Teacher/${userId}`);
         } else if (userType === 'librarian') {
@@ -49,12 +57,12 @@ function FacultyLogin({ setIsLoggedIn }) {
 
         <div className='form-container'>
 
-          <div class="slide-controls">
+          <div className="slide-controls">
             <input type="radio" name="slide" id="login"/>
             <input type="radio" name="slide" id="signup" />
-            <label for="login" class="slide login">MACTs</label>
-            <label for="signup" class="slide signup">Faculty</label>
-            <div class="slider-tab"></div>
+            <label htmlFor="login" className="slide login">MACTs</label>
+            <label htmlFor="signup" className="slide signup">Faculty</label>
+            <div className="slider-tab"></div>
           </div>
 
           <div className="form-inner">

@@ -1,4 +1,3 @@
-// AdminLogin.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import '../Stylesheet/login.css';
@@ -26,7 +25,7 @@ function AdminLogin() {
       });
       if (response.status === 200) {
         const { token } = response.data;
-        login(token); // Use the login function from AuthContext
+        login(token, 'admin');
       } else {
         alert('Invalid username or password');
       }

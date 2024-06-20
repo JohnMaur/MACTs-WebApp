@@ -21,11 +21,6 @@ import Guard from './Components/Admin/Registration-pages/Guard-registration';
 import AttendancePage from './Components/Admin/Attendance/Attendancen-page';
 import AttendancePageReport from './Components/Admin/Attendance/Report/Attendance-page-report';
 
-import StudentCp1 from './Components/Admin/Student-Page/StudentCP-1D';
-import StudentCp2 from './Components/Admin/Student-Page/StudentCP-2D';
-import StudentCp3 from './Components/Admin/Student-Page/StudentCP-3D';
-import StudentCp4 from './Components/Admin/Student-Page/StudentCP-4D';
-
 import RFID_page from './Components/Admin/RFID-Registratration/RFID-Page';
 import DevicePageRegistration from './Components/Admin/Device-Registration/Device-page';
 
@@ -59,14 +54,12 @@ import RegistrarReport from './Components/Faculty/Registar/RegistrarReport';
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <Routes>
       <Route path="/login/admin" element={<AdminLogin />} />
-      {/* <Route path="/login" element={<FacultyLogin setIsLoggedIn={setIsLoggedIn} />} /> */}
 
-        // Admin Route
+      // Admin Route
       <Route path="/dashboard" element={<ProtectedRoute element={Admin_landingPage} />} />
       <Route path="/Registration/Teacher" element={<ProtectedRoute element={Teacher} />} />
       <Route path="/Registration/Registrar" element={<ProtectedRoute element={Registrar} />} />
@@ -77,7 +70,7 @@ function App() {
       // Attendance route AttendancePage
       <Route path="/Attendance" element={<ProtectedRoute element={AttendancePage} />} />
       <Route path="/attendance/report/:attendance_code" element={<ProtectedRoute element={AttendancePageReport} />} />
- 
+
       // Admin Report Route
       <Route path="/Library/Report" element={<ProtectedRoute element={AdminLibraryReport} />} />
       <Route path="/Gym/Report" element={<ProtectedRoute element={AdminGymReport} />} />
@@ -87,28 +80,30 @@ function App() {
       <Route path="/Registration/RFID" element={<ProtectedRoute element={RFID_page} />} />
       <Route path="/Registration/Device" element={<ProtectedRoute element={DevicePageRegistration} />} />
 
+      // Faculty login
+      <Route path="/login" element={<FacultyLogin />} />
+
       // Teacher Route
-      <Route path="/dashboard/Teacher/:userId" element={isLoggedIn ? <Teacher_landingPage /> : <Navigate to="/login" />} />
+      <Route path="/dashboard/Teacher/:userId" element={<ProtectedRoute element={Teacher_landingPage} />} />
+      <Route path="/Add/Attendance/:userId" element={<ProtectedRoute element={FacultyAddAttendancePage} />} />
+      <Route path="/attendance_report/:attendance_code/:userId" element={<ProtectedRoute element={FacultyAttendancePageReport} />} />
+      <Route path="Faculty/RFID_Registration/:userId" element={<ProtectedRoute element={Teacher_RFID_page} />} />
 
-      <Route path="/Add/Attendance/:userId" element={isLoggedIn ? <FacultyAddAttendancePage /> : <Navigate to="/login" />} />
-      <Route path="/Faculty/attendance/report/:attendance_code" element={isLoggedIn ? <FacultyAttendancePageReport /> : <Navigate to="/login/admin" />} />
-      {/* <Route path="/RFID_Registration/:userId" element={isLoggedIn ? <Teacher_RFID_page /> : <Navigate to="/login" />} /> */}
+      // Librarian Route
+      <Route path="/dashboard/Library" element={<ProtectedRoute element={Librarian_landingPage} />} />
+      <Route path="/Facility/Library/Report" element={<ProtectedRoute element={LibraryReport} />} />
 
-        // Librarian Route
-      <Route path="/dashboard/Library" element={isLoggedIn ? <Librarian_landingPage /> : <Navigate to="/login" />} />
-      <Route path="/Facility/Library/Report/" element={isLoggedIn ? <LibraryReport /> : <Navigate to="/login" />} />
+      // Gym Route
+      <Route path="/dashboard/Gym" element={<ProtectedRoute element={GymLandingPage} />} />
+      <Route path="/Facility/Gym/Report" element={<ProtectedRoute element={GymReport} />} />
 
-        // Gym Route
-      <Route path="/dashboard/Gym" element={isLoggedIn ? <GymLandingPage /> : <Navigate to="/login" />} />
-      <Route path="/Facility/Gym/Report" element={isLoggedIn ? <GymReport /> : <Navigate to="/login" />} />
+      // Guard Route
+      <Route path="/dashboard/Gatepass" element={<ProtectedRoute element={GuardLandingPage} />} />
+      <Route path="/Facility/Gatepass/Report" element={<ProtectedRoute element={GuardReport} />} />
 
-        // Guard Route
-      <Route path="/dashboard/Gatepass" element={isLoggedIn ? <GuardLandingPage /> : <Navigate to="/login" />} />
-      <Route path="/Facility/Gatepass/Report" element={isLoggedIn ? <GuardReport /> : <Navigate to="/login" />} />
-
-        // Registrar Route
-      <Route path="/dashboard/Registrar" element={isLoggedIn ? <RegistrarLandingPage /> : <Navigate to="/login" />} />
-      <Route path="/Facility/Registrar/Report" element={isLoggedIn ? <RegistrarReport /> : <Navigate to="/login" />} />
+      // Registrar Route
+      <Route path="/dashboard/Registrar" element={<ProtectedRoute element={RegistrarLandingPage} />} />
+      <Route path="/Facility/Registrar/Report" element={<ProtectedRoute element={RegistrarReport} />} />
 
     </Routes>
   );

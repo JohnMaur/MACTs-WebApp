@@ -8,105 +8,52 @@ export const AuthProvider = ({ children }) => {
   
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem('token');
-    return !!token;
+    const userType = localStorage.getItem('userType');
+    return !!token && !!userType;
+  });
+
+  const [userType, setUserType] = useState(() => {
+    return localStorage.getItem('userType') || null;
   });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('Token on load:', token); // Add this line to check the token
-    if (token) {
+    const storedUserType = localStorage.getItem('userType');
+    if (token && storedUserType) {
       setIsLoggedIn(true);
+      setUserType(storedUserType);
     } else {
       navigate('/login/admin');
     }
   }, [navigate]);
 
-  const login = (token) => {
+  const login = (token, userType) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('userType', userType);
     setIsLoggedIn(true);
-    navigate('/dashboard');
+    setUserType(userType);
+    navigate(userType === 'admin' ? '/dashboard' : `/dashboard/${userType}`);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userType');
     setIsLoggedIn(false);
+    setUserType(null);
     navigate('/login/admin');
   };
 
+  // const FacultyLogout = () => {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('userType');
+  //   setIsLoggedIn(false);
+  //   setUserType(null);
+  //   navigate('/login');
+  // };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userType, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-// import React, { createContext, useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-
-// export const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-//   const navigate = useNavigate();
-  
-//   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-//     const adminToken = localStorage.getItem('adminToken');
-//     const facultyToken = localStorage.getItem('facultyToken');
-//     return !!adminToken || !!facultyToken;
-//   });
-
-//   useEffect(() => {
-//     const adminToken = localStorage.getItem('adminToken');
-//     const facultyToken = localStorage.getItem('facultyToken');
-//     if (adminToken) {
-//       setIsLoggedIn(true);
-//       navigate('/dashboard');
-//     } else if (facultyToken) {
-//       setIsLoggedIn(true);
-//       navigate('/dashboard');
-//     } else {
-//       navigate('/login/admin');
-//     }
-//   }, [navigate]);
-
-//   const loginAdmin = (token) => {
-//     localStorage.setItem('adminToken', token);
-//     setIsLoggedIn(true);
-//     navigate('/dashboard');
-//   };
-
-//   const loginFaculty = (token, userType, userId) => {
-//     localStorage.setItem('facultyToken', token);
-//     setIsLoggedIn(true);
-//     if (userType === 'teacher') {
-//       navigate(`/dashboard/Teacher/${userId}`);
-//     } else if (userType === 'librarian') {
-//       navigate(`/dashboard/Library`);
-//     } else if (userType === 'gym') {
-//       navigate(`/dashboard/Gym`);
-//     } else if (userType === 'guard') {
-//       navigate(`/dashboard/Gatepass`);
-//     } else if (userType === 'registrar') {
-//       navigate(`/dashboard/Registrar`);
-//     }
-//   };
-
-//   const logoutAdmin = () => {
-//     localStorage.removeItem('adminToken');
-//     setIsLoggedIn(false);
-//     navigate('/login/admin');
-//   };
-
-//   const logoutFaculty = () => {
-//     localStorage.removeItem('facultyToken');
-//     setIsLoggedIn(false);
-//     navigate('/login');
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ isLoggedIn, loginAdmin, loginFaculty, logoutAdmin, logoutFaculty }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-

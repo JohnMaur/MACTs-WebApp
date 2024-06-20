@@ -261,7 +261,7 @@ const FacultyAttendanceTable = () => {
   };
 
   const handleRowClick = (record) => {
-    navigate(`/Faculty/attendance/report/${record.attendance_code}`);
+    navigate(`/attendance_report/${record.attendance_code}/${userId}`);
   };
 
   const addAttendance = (attendanceData) => {
