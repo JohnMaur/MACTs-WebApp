@@ -12,7 +12,7 @@ const Teacher = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
     <MainSidebar collapsed={collapsed} />
-    <Layout>
+    <Layout style={{ maxHeight: "100vh" }}>
       <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
       <AntdContent style={{ margin: '24px 16px', padding: 24, minHeight: 280 }}>
         <TeacherRegistration />

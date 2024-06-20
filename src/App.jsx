@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Navigate } from 'react-router-dom'; // Import Navigate for fallback
 import ProtectedRoute from './ProtectedRoute';
 
 // Admin Route
@@ -61,11 +60,12 @@ function App() {
 
       // Admin Route
       <Route path="/dashboard" element={<ProtectedRoute element={Admin_landingPage} />} />
-      <Route path="/Registration/Teacher" element={<ProtectedRoute element={Teacher} />} />
-      <Route path="/Registration/Registrar" element={<ProtectedRoute element={Registrar} />} />
-      <Route path="/Registration/Librarian" element={<ProtectedRoute element={Librarian} />} />
-      <Route path="/Registration/Gym" element={<ProtectedRoute element={Gym} />} />
-      <Route path="/Registration/Guard" element={<ProtectedRoute element={Guard} />} />
+
+      <Route path="/Teacher/Registration" element={<ProtectedRoute element={Teacher} />} />
+      <Route path="/Registrar/Registration" element={<ProtectedRoute element={Registrar} />} />
+      <Route path="/Librarian/Registration" element={<ProtectedRoute element={Librarian} />} />
+      <Route path="/Gym/Registration" element={<ProtectedRoute element={Gym} />} />
+      <Route path="/Guard/Registration" element={<ProtectedRoute element={Guard} />} />
 
       // Attendance route AttendancePage
       <Route path="/Attendance" element={<ProtectedRoute element={AttendancePage} />} />

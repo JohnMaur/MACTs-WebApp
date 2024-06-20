@@ -56,20 +56,20 @@ const Sidebar = ({ collapsed }) => {
         </Menu.Item>
 
         <SubMenu key="Registration" icon={<UserAddOutlined />} title="Faculty Registration">
-          <Menu.Item key="/Registration/Teacher">
-            <Link to="/Registration/Teacher">Teacher</Link>
+          <Menu.Item key="/Teacher/Registration">
+            <Link to="/Teacher/Registration">Teacher</Link>
           </Menu.Item>
-          <Menu.Item key="/Registration/Registrar">
-            <Link to="/Registration/Registrar">Registrar</Link>
+          <Menu.Item key="/Registrar/Registration">
+            <Link to="/Registrar/Registration">Registrar</Link>
           </Menu.Item>
-          <Menu.Item key="/Registration/Librarian">
-            <Link to="/Registration/Librarian">Librarian</Link>
+          <Menu.Item key="/Librarian/Registration">
+            <Link to="/Librarian/Registration">Librarian</Link>
           </Menu.Item>
-          <Menu.Item key="/Registration/Gym">
-            <Link to="/Registration/Gym">Gym personnel</Link>
+          <Menu.Item key="/Gym/Registration">
+            <Link to="/Gym/Registration">Gym personnel</Link>
           </Menu.Item>
-          <Menu.Item key="/Registration/Guard">
-            <Link to="/Registration/Guard">Guard</Link>
+          <Menu.Item key="/Guard/Registration">
+            <Link to="/Guard/Registration">Guard</Link>
           </Menu.Item>
         </SubMenu>
 
