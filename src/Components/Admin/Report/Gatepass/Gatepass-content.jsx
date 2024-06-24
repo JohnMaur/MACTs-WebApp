@@ -1,32 +1,3 @@
-// import React from 'react';
-// import { Layout } from 'antd';
-// import GatepassTable from './Gatepass-Table';
-
-// const { Content: AntdContent } = Layout;
-
-// const GatepassContent = ({ colorBgContainer, borderRadiusLG }) => {
-//   return (
-//     <AntdContent
-//       style={{
-//         margin: '24px 16px',
-//         padding: 24,
-//         minHeight: 280,
-//         maxHeight: "100vh",
-//         background: colorBgContainer,
-//         borderRadius: borderRadiusLG,
-//         overflowY: 'auto', 
-//         overflowX: "auto",
-//       }}
-//     >
-//       <div >
-//         <GatepassTable />
-//       </div>
-//     </AntdContent>
-//   );
-// };
-
-// export default GatepassContent;
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -46,7 +17,7 @@ const GatepassContent = ({ colorBgContainer, borderRadiusLG }) => {
   const fetchData = (date) => {
     setLoading(true);
     const formattedDate = moment(date).format('YYYY-MM-DD');
-    fetch(`http://localhost:2526/Gatepass-Report/pdf?date=${formattedDate}`)
+    fetch(`https://macts-backend-webapp.onrender.com/Gatepass-Report/pdf?date=${formattedDate}`)
       .then((response) => response.json())
       .then((data) => {
         setData(data);

@@ -18,7 +18,7 @@ const LibrarianRegistration = ({ borderRadiusLG }) => {
     }
 
     // Proceed with signup
-    fetch('http://localhost:2526/LibrarianSignUp', {
+    fetch('https://macts-backend-webapp.onrender.com/LibrarianSignUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

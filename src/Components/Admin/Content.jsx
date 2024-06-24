@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Card, Row, Col, Typography } from 'antd';
-import userImg from '../../assets/user.png'; 
+import { Layout, Card, Row, Col, Typography, Alert } from 'antd';
+import userImg from '../../assets/user.png';
 import socketIOClient from 'socket.io-client';
 
 // RFID tag servers
-const RegistrarRFIDserver = 'http://localhost:2626';
-const attendanceRFIDServer = 'http://localhost:2727';
-const libraryRFIDserver = 'http://localhost:2929';
-const gymRFIDserver = 'http://localhost:3030';
-const gatepassRFIDserver = 'http://localhost:3131';
+const RegistrarRFIDserver = 'wss://macts-backend-registrar.onrender.com';
+const attendanceRFIDServer = 'wss://macts-backend-attendance.onrender.com';
+const libraryRFIDserver = 'wss://macts-backend-library.onrender.com';
+const gymRFIDserver = 'wss://macts-backend-gym.onrender.com';
+const gatepassRFIDserver = 'wss://macts-backend-gatepass.onrender.com';
 
-const studentInfoServerUrl = 'http://localhost:2526';
+const studentInfoServerUrl = 'https://macts-backend-webapp.onrender.com';
 
 const { Content: AntdContent } = Layout;
 const { Title, Text } = Typography;
@@ -24,6 +24,8 @@ const CustomContent = ({ colorBgContainer, borderRadiusLG }) => {
   const [previousTime, setPreviousTime] = useState('');
   const [currentSetting, setCurrentSetting] = useState('');
   const [previousSetting, setPreviousSetting] = useState('');
+  const [lastTapTime, setLastTapTime] = useState(null); // State to track last tap time
+  const [isAlertVisible, setIsAlertVisible] = useState(false); // State to track alert visibility
 
   useEffect(() => {
     const RegistrarSocket = socketIOClient(RegistrarRFIDserver);
@@ -33,8 +35,16 @@ const CustomContent = ({ colorBgContainer, borderRadiusLG }) => {
     const gatepassSocket = socketIOClient(gatepassRFIDserver);
 
     const handleTagData = (receivedData, setting) => {
+      const now = new Date();
+      if (lastTapTime && (now - lastTapTime) < 60000) {
+        setIsAlertVisible(true); // Show alert if tap is within 1 minute
+        setTimeout(() => setIsAlertVisible(false), 3000); // Hide alert after 3 seconds
+        console.log('Ignoring tap: Too soon since last tap');
+        return; // Ignore the tap if it's within 1 minute of the last tap
+      }
       isValidTagData(receivedData).then((isValid) => {
         if (isValid) {
+          setLastTapTime(now); // Update last tap time
           setPreviousTagData(currentTagData); // Move current data to previous
           setPreviousTime(currentTime); // Move current time to previous
           setPreviousSetting(currentSetting); // Move current setting to previous
@@ -61,7 +71,6 @@ const CustomContent = ({ colorBgContainer, borderRadiusLG }) => {
       handleTagData(receivedData, 'Gatepass');
     });
 
-
     return () => {
       RegistrarSocket.disconnect();
       attendanceSocket.disconnect();
@@ -69,7 +78,7 @@ const CustomContent = ({ colorBgContainer, borderRadiusLG }) => {
       gymSocket.disconnect();
       gatepassSocket.disconnect();
     };
-  }, [currentTagData, currentTime, currentSetting]);
+  }, [currentTagData, currentTime, currentSetting, lastTapTime]);
 
   const isValidTagData = async (tagData) => {
     // Fetch student info data from the server
@@ -268,6 +277,23 @@ const CustomContent = ({ colorBgContainer, borderRadiusLG }) => {
             </Card>
           </Col>
         </Row>
+
+        {isAlertVisible && (
+          <div style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1000
+          }}>
+            <Alert
+              message="Duplicate Tap Detected"
+              description="You've already tapped your RFID card. Please wait for a minute before tapping again."
+              type="warning"
+              showIcon
+            />
+          </div>
+        )}
       </div>
     </AntdContent>
   );

@@ -11,31 +11,41 @@ function FacultyLogin() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      // handle redirection based on user type if needed
+      const userType = localStorage.getItem('userType');
+      const userId = localStorage.getItem('userId');
+      if (userType && userId) {
+        redirectUser(userType, userId);
+      }
     }
   }, [isLoggedIn, navigate]);
+
+  const redirectUser = (userType, userId) => {
+    if (userType === 'teacher') {
+      navigate(`/dashboard/Teacher/${userId}`);
+    } else if (userType === 'librarian') {
+      navigate(`/dashboard/Library`);
+    } else if (userType === 'gym') {
+      navigate(`/dashboard/Gym`);
+    } else if (userType === 'guard') {
+      navigate(`/dashboard/Gatepass`);
+    } else if (userType === 'registrar') {
+      navigate(`/dashboard/Registrar`);
+    }
+  };
 
   const facultyLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:2526/faculty', {
+      const response = await axios.post('https://macts-backend-webapp.onrender.com/faculty', {
         faculty_user: facultyUser,
         faculty_pass: facultyPass,
       });
       if (response.status === 200) {
         const { userType, userId, token } = response.data;
         login(token, userType);
-        if (userType === 'teacher') {
-          navigate(`/dashboard/Teacher/${userId}`);
-        } else if (userType === 'librarian') {
-          navigate(`/dashboard/Library`);
-        } else if (userType === 'gym') {
-          navigate(`/dashboard/Gym`);
-        } else if (userType === 'guard') {
-          navigate(`/dashboard/Gatepass`);
-        } else if (userType === 'registrar') {
-          navigate(`/dashboard/Registrar`);
-        }
+        localStorage.setItem('userType', userType);
+        localStorage.setItem('userId', userId);
+        redirectUser(userType, userId);
       } else {
         alert('Invalid username or password');
       }
@@ -56,7 +66,6 @@ function FacultyLogin() {
         </div>
 
         <div className='form-container'>
-
           <div className="slide-controls">
             <input type="radio" name="slide" id="login"/>
             <input type="radio" name="slide" id="signup" />

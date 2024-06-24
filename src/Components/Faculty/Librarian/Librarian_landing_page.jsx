@@ -10,7 +10,7 @@ const Librarian_landingPage = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Librarian_sidebar collapsed={collapsed} />
-      <Layout>
+      <Layout style={{ maxHeight: "100vh", overflowY: "auto"  }}>
         <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
         <LibraryContent/>
       </Layout>

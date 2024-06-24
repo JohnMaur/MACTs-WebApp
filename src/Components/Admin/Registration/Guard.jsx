@@ -18,7 +18,7 @@ const GuardRegistration = ({ borderRadiusLG }) => {
     }
   
     // Proceed with signup
-    fetch('http://localhost:2526/GuardSignUp', {
+    fetch('https://macts-backend-webapp.onrender.com/GuardSignUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

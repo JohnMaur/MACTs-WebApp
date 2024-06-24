@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Menu, Layout } from 'antd';
 import { IdcardOutlined, SolutionOutlined, LogoutOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
-// import { AuthContext } from '../../../AuthContext';
+import { AuthContext } from '../../../AuthContext';
 
 const { Sider } = Layout;
 
@@ -10,7 +10,7 @@ const TeacherSidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
   const userId = location.pathname.split('/')[3]; 
-  // const { FacultyLogout } = useContext(AuthContext);
+  const { facultyLogout } = useContext(AuthContext);
 
   // Function to handle submenu open keys
   const handleOpenChange = (keys) => {
@@ -26,9 +26,9 @@ const TeacherSidebar = ({ collapsed }) => {
     setOpenKeys(submenuKey ? [submenuKey] : []);
   }, [location.pathname]);
 
-  // const handleLogout = () => {
-  //   FacultyLogout();
-  // };
+  const handleLogout = () => {
+    facultyLogout();
+  };
 
   return (
     <Sider
@@ -63,13 +63,13 @@ const TeacherSidebar = ({ collapsed }) => {
           <Link to={`/Faculty/RFID_Registration/${userId}`}>RFID Registration</Link>
         </Menu.Item>
  
-        <Menu.Item key="/login" icon={<LogoutOutlined />}>
+        {/* <Menu.Item key="/login" icon={<LogoutOutlined />}>
           <Link to="/login">Log out</Link>
-        </Menu.Item>
-
-        {/* <Menu.Item key="/FacultyLogout" icon={<LogoutOutlined />} onClick={handleLogout}>
-          Log out
         </Menu.Item> */}
+
+        <Menu.Item key="/logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+          Log out
+        </Menu.Item>
       </Menu>
     </Sider>
   );

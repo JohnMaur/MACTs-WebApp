@@ -18,7 +18,7 @@ const RegistrarRegistration = ({ borderRadiusLG }) => {
     }
 
     // Proceed with signup
-    fetch('http://localhost:2526/registrarSignUp', {
+    fetch('https://macts-backend-webapp.onrender.com/registrarSignUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

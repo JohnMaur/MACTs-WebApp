@@ -13,7 +13,7 @@ const Admin_landingPage = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <MainSidebar collapsed={collapsed} />
-      <Layout>
+      <Layout style={{ maxHeight: "100vh", overflowY: "auto" }}>
         <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
         <CustomContent colorBgContainer={colorBgContainer} borderRadiusLG={borderRadiusLG} />
       </Layout>
@@ -22,20 +22,3 @@ const Admin_landingPage = () => {
 };
 
 export default Admin_landingPage;
-
-// Admin_landingPage.jsx
-// import React from 'react'
-// import MainLayout from '../MainLayout'
-// import CustomContent from './Content';
-
-// function Admin_landingPage() {
-//   return (
-//     <MainLayout>
-//       <div>
-//         <CustomContent/>
-//       </div>
-//     </MainLayout>
-//   )
-// }
-
-// export default Admin_landingPage

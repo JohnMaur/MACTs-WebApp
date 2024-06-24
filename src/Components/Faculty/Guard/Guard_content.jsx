@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Layout } from 'antd';
+import { Layout, Alert } from 'antd';
 import userImg from '../../../assets/user.png';
 import socketIOClient from 'socket.io-client';
 
-const gatepassSERVER = 'http://localhost:3131';
-const studentInfoServerUrl = 'http://localhost:2526';
-const studentDeviceServerUrl = 'http://localhost:2526/studentDevice';
+const gatepassSERVER = 'wss://macts-backend-gatepass.onrender.com';
+const studentInfoServerUrl = 'https://macts-backend-webapp.onrender.com';
+const studentDeviceServerUrl = 'https://macts-backend-webapp.onrender.com/studentDevice';
 
 const { Content: AntdContent } = Layout;
 
@@ -14,17 +14,34 @@ const GuardContent = () => {
   const [currentStudentInfo, setCurrentStudentInfo] = useState(null);
   const [currentDeviceInfo, setCurrentDeviceInfo] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
+  const [lastTapTime, setLastTapTime] = useState(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const timeoutRef = useRef(null);
+  const tapTimeoutRef = useRef(null);
 
   useEffect(() => {
     const socket = socketIOClient(gatepassSERVER);
 
     socket.on('tagData', receivedData => {
       console.log('Received tag data:', receivedData);
+
+      const now = new Date();
+      if (lastTapTime && now - lastTapTime < 60000 && receivedData === currentTagData) {
+        setIsAlertVisible(true);
+        if (tapTimeoutRef.current) {
+          clearTimeout(tapTimeoutRef.current);
+        }
+        tapTimeoutRef.current = setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000); // Hide alert after 5 seconds
+        return;
+      }
+
       fetchStudentDeviceInfo(receivedData).then((isValid) => {
         if (isValid) {
           setCurrentTagData(receivedData);
-          setCurrentTime(new Date().toLocaleString());
+          setCurrentTime(now.toLocaleString());
+          setLastTapTime(now);
           fetchStudentInfo(isValid.user_id);
         }
       });
@@ -35,8 +52,11 @@ const GuardContent = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (tapTimeoutRef.current) {
+        clearTimeout(tapTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [lastTapTime, currentTagData]);
 
   const fetchStudentDeviceInfo = async (tagData) => {
     try {
@@ -73,7 +93,7 @@ const GuardContent = () => {
           console.log('Clearing student and device info');
           setCurrentStudentInfo(null);
           setCurrentDeviceInfo(null);
-        }, 15000);
+        }, 15000); // Clear info after 15 seconds
       } else {
         setCurrentStudentInfo(null);
       }
@@ -89,9 +109,27 @@ const GuardContent = () => {
         minHeight: 280,
         background: "rgb(252, 252, 252)",
         borderRadius: 12,
-        display: "flex"
+        display: "flex",
+        position: "relative"
       }}
     >
+        {isAlertVisible && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000
+        }}>
+          <Alert
+            message="Duplicate Tap Detected"
+            description="You've already tapped your RFID card. Please wait for a minute before tapping again."
+            type="warning"
+            showIcon
+          />
+        </div>
+      )}
+
       {currentStudentInfo && currentDeviceInfo ? (
         <>
           <div className='border-solid border-r w-1/3 m-0 h-full'>

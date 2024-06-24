@@ -1,26 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Layout } from 'antd';
+import { Layout, Alert } from 'antd';
 import userImg from '../../../assets/user.png';
 import socketIOClient from 'socket.io-client';
 
-const RegistrarServerUrl = 'http://localhost:2626';
-const studentInfoServerUrl = 'http://localhost:2526';
+const RegistrarServerUrl = 'wss://macts-backend-registrar.onrender.com';
+const studentInfoServerUrl = 'https://macts-backend-webapp.onrender.com';
 const { Content: AntdContent } = Layout;
 
 const RegistrarContent = ({ borderRadiusLG }) => {
   const [currentTagData, setCurrentTagData] = useState('');
   const [currentStudentInfo, setCurrentStudentInfo] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
+  const [lastTapTime, setLastTapTime] = useState(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   useEffect(() => {
     const socket = socketIOClient(RegistrarServerUrl);
 
     socket.on('tagData', receivedData => {
       isValidTagData(receivedData).then((isValid) => {
+        const now = new Date();
+
+        if (lastTapTime && now - lastTapTime < 60000 && receivedData === currentTagData) {
+          setIsAlertVisible(true);
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000); // Hide alert after 5 seconds
+          return;
+        }
+
         if (isValid) {
           setCurrentTagData(receivedData);
-          setCurrentTime(new Date().toLocaleString()); // Update current time when tagData changes
+          setCurrentTime(now.toLocaleString()); // Update current time when tagData changes
           fetchStudentInfo(receivedData);
+          setLastTapTime(now);
         }
       });
     });
@@ -28,7 +41,7 @@ const RegistrarContent = ({ borderRadiusLG }) => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [lastTapTime, currentTagData]);
 
   const isValidTagData = async (tagData) => {
     try {
@@ -50,9 +63,7 @@ const RegistrarContent = ({ borderRadiusLG }) => {
 
       if (matchedStudent) {
         setCurrentStudentInfo(matchedStudent);
-        fetchTapStatus(matchedStudent.user_id);
-
-        // Clear the data after 10 seconds
+        // Clear student info after 30 seconds
         setTimeout(() => {
           setCurrentStudentInfo(null);
         }, 30000);
@@ -74,6 +85,23 @@ const RegistrarContent = ({ borderRadiusLG }) => {
         display: "flex"
       }}
     >
+      {isAlertVisible && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000
+        }}>
+          <Alert
+            message="Duplicate Tap Detected"
+            description="You've already tapped your RFID card. Please wait for a minute before tapping again."
+            type="warning"
+            showIcon
+          />
+        </div>
+      )}
+
       {currentStudentInfo && (
         <>
           <div className='border-solid border-r w-1/3 m-0 h-full'>
@@ -91,10 +119,9 @@ const RegistrarContent = ({ borderRadiusLG }) => {
                   className="m-4 mt-4.5 w-60 h-60 bg-cover p-7"
                 />
               )}
-
             </div>
             <div className='flex justify-center h-[40%]'>
-        
+              {/* Optional: Add additional details if needed */}
             </div>
           </div>
 

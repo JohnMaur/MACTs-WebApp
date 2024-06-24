@@ -1,32 +1,3 @@
-// import React from 'react';
-// import { Layout } from 'antd';
-// import RegistrarTable from './Registrar-Table';
-
-// const { Content: AntdContent } = Layout;
-
-// const RegistrarContent = ({ colorBgContainer, borderRadiusLG }) => {
-//   return (
-//     <AntdContent
-//       style={{
-//         margin: '24px 16px',
-//         padding: 24,
-//         minHeight: 280,
-//         maxHeight: "100vh",
-//         background: colorBgContainer,
-//         borderRadius: borderRadiusLG,
-//         overflowY: 'auto', 
-//         overflowX: "auto",
-//       }}
-//     >
-//       <div >
-//         <RegistrarTable />
-//       </div>
-//     </AntdContent>
-//   );
-// };
-
-// export default RegistrarContent;
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -46,7 +17,7 @@ const RegistrarContent = ({ colorBgContainer, borderRadiusLG }) => {
   const fetchData = (date) => {
     setLoading(true);
     const formattedDate = moment(date).format('YYYY-MM-DD');
-    fetch(`http://localhost:2526/Registrar-Report/pdf?date=${formattedDate}`)
+    fetch(`https://macts-backend-webapp.onrender.com/Registrar-Report/pdf?date=${formattedDate}`)
       .then((response) => response.json())
       .then((data) => {
         setData(data);

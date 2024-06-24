@@ -92,7 +92,7 @@ const Modal = ({ isVisible, onClose, addAttendance, userId }) => {
       userId: userId, // Include userId
     };
 
-    axios.post('http://localhost:2526/Facultyadd-Attendance', attendanceData)
+    axios.post('https://macts-backend-webapp.onrender.com/Facultyadd-Attendance', attendanceData)
       .then(response => {
         console.log('Attendance added successfully');
         addAttendance(attendanceData); // Update attendance data in parent
@@ -192,7 +192,7 @@ const FacultyAttendanceTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:2526/Facultyattendance/${userId}`);
+        const response = await axios.get(`https://macts-backend-webapp.onrender.com/Facultyattendance/${userId}`);
         const responseData = response.data;
         const transformedData = responseData.map((item) => ({
           key: item.attendance_id.toString(),

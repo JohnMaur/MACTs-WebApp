@@ -1,26 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { Layout } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Layout, Alert } from 'antd';
 import userImg from '../../../assets/user.png';
 import socketIOClient from 'socket.io-client';
 
-const attendanceServer = 'http://localhost:2727';
-const studentInfoServerUrl = 'http://localhost:2526';
+const attendanceServer = 'wss://macts-backend-attendance.onrender.com';
+const studentInfoServerUrl = 'https://macts-backend-webapp.onrender.com';
 const { Content: AntdContent } = Layout;
 
 const TeacherContent = ({ borderRadiusLG }) => {
   const [currentTagData, setCurrentTagData] = useState('');
   const [currentStudentInfo, setCurrentStudentInfo] = useState(null);
-  const [currentTapStatus, setCurrentTapStatus] = useState('');
   const [currentTime, setCurrentTime] = useState('');
+  const [lastTapTime, setLastTapTime] = useState(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const timeoutRef = useRef(null);
+  const alertTimeoutRef = useRef(null);
 
   useEffect(() => {
     const socket = socketIOClient(attendanceServer);
 
     socket.on('tagData', receivedData => {
+      const now = new Date();
+      if (lastTapTime && now - lastTapTime < 60000 && receivedData === currentTagData) {
+        setIsAlertVisible(true);
+        if (alertTimeoutRef.current) {
+          clearTimeout(alertTimeoutRef.current);
+        }
+        alertTimeoutRef.current = setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000); // Hide alert after 5 seconds
+        return;
+      }
+
       isValidTagData(receivedData).then((isValid) => {
         if (isValid) {
           setCurrentTagData(receivedData);
-          setCurrentTime(new Date().toLocaleString()); // Update current time when tagData changes
+          setCurrentTime(now.toLocaleString());
+          setLastTapTime(now);
           fetchStudentInfo(receivedData);
         }
       });
@@ -28,8 +44,14 @@ const TeacherContent = ({ borderRadiusLG }) => {
 
     return () => {
       socket.disconnect();
+      if (alertTimeoutRef.current) {
+        clearTimeout(alertTimeoutRef.current);
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
-  }, []);
+  }, [lastTapTime, currentTagData]);
 
   const isValidTagData = async (tagData) => {
     try {
@@ -53,7 +75,10 @@ const TeacherContent = ({ borderRadiusLG }) => {
         setCurrentStudentInfo(matchedStudent);
 
         // Clear the data after 10 seconds
-        setTimeout(() => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
           setCurrentStudentInfo(null);
         }, 10000);
       } else {
@@ -71,27 +96,39 @@ const TeacherContent = ({ borderRadiusLG }) => {
         minHeight: 280,
         background: "rgb(252, 252, 252)",
         borderRadius: 12,
-        display: "flex"
+        display: "flex",
+        position: "relative"
       }}
     >
-      {currentStudentInfo && (
-        <>
-          <div className='border-solid border-r w-1/3 m-0 h-full'>
-            <div className='shadow-sm w-full h-[60%] flex justify-center items-center'>
-              {currentStudentInfo.student_profile ? (
-                <img
-                  src={currentStudentInfo.student_profile}
-                  alt="Profile"
-                  className="m-4 mt-4.5 w-60 h-60 bg-cover p-7 rounded-full"
-                />
-              ) : (
-                <img
-                  src={userImg}
-                  alt="Profile"
-                  className="m-4 mt-4.5 w-60 h-60 bg-cover p-7"
-                />
-              )}
+      {isAlertVisible && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000
+        }}>
+          <Alert
+            message="Duplicate Tap Detected"
+            description="You've already tapped your RFID card. Please wait for a minute before tapping again."
+            type="warning"
+            showIcon
+          />
+        </div>
+      )}
 
+      {currentStudentInfo ? (
+        <>
+          <div className='lg:border-solid lg:border-r lg:w-1/3 lg:m-0 lg:h-full'>
+            <div className='lg:shadow-sm lg:w-full lg:h-[60%] lg:flex lg:justify-center lg:items-center'>
+              <img
+                src={currentStudentInfo.student_profile || userImg}
+                alt="Profile"
+                className="
+                  sm:m-4 sm:mt-4.5 sm:w-20 sm:h-20 sm:bg-cover
+                  lg:m-4 lg:mt-4.5 lg:w-60 lg:h-60 lg:bg-cover lg:p-7 rounded-full
+                  "
+              />
             </div>
           </div>
 
@@ -105,9 +142,7 @@ const TeacherContent = ({ borderRadiusLG }) => {
             </div>
           </div>
         </>
-      )}
-
-      {!currentStudentInfo && (
+      ) : (
         <>
           <div className='border-solid border-r w-1/3 m-0 h-full'>
             <div className='shadow-sm w-full h-[60%] flex justify-center items-center'>

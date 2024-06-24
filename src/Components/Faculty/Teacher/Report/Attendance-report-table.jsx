@@ -87,8 +87,8 @@ const FacultyAttendanceReportTable = () => {
       dataIndex: 'name',
     },
     {
-      title: 'Code',
-      dataIndex: 'code',
+      title: 'Attendance Description',
+      dataIndex: 'attendanceDescription',
     },
     {
       title: 'Course',
@@ -110,19 +110,19 @@ const FacultyAttendanceReportTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:2526/attendance/report/${attendance_code}`);
+        const response = await axios.post(`https://macts-backend-webapp.onrender.com/attendance/report/${attendance_code}`);
         const responseData = response.data;
         const transformedData = responseData.map((item) => ({
-          key: item.id,
+          key: item.id, 
           tuptId: item.attendance_tupId,
           name: item.attendance_firstName,
-          code: item.attendance_code,
+          attendanceDescription: item.attendance_description,
           course: item.attendance_course,
           section: item.attendance_section,
           date: item.attendance_historyDate,
         }));
 
-        // Log the transformed data
+        // Log the transformed data 
         console.log("Transformed Data:", transformedData);
 
         setData(transformedData);

@@ -10,7 +10,7 @@ const RegistrarLandingPage = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <RegistrarSidebar collapsed={collapsed} />
-      <Layout style={{ maxHeight: "100vh" }}>
+      <Layout style={{ maxHeight: "100vh", overflowY: "auto"  }}>
         <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
         <RegistrarContent/>
       </Layout>

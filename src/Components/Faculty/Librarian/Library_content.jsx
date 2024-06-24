@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Layout } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Layout, Alert } from 'antd';
 import userImg from '../../../assets/user.png';
 import socketIOClient from 'socket.io-client';
 
-const arduinoServerUrl = 'http://localhost:2929';
-const studentInfoServerUrl = 'http://localhost:2526';
+const arduinoServerUrl = 'wss://macts-backend-library.onrender.com';
+const studentInfoServerUrl = 'https://macts-backend-webapp.onrender.com';
 const { Content: AntdContent } = Layout;
 
 const LibraryContent = ({ borderRadiusLG }) => {
@@ -12,15 +12,32 @@ const LibraryContent = ({ borderRadiusLG }) => {
   const [currentStudentInfo, setCurrentStudentInfo] = useState(null);
   const [currentTapStatus, setCurrentTapStatus] = useState('');
   const [currentTime, setCurrentTime] = useState('');
+  const [lastTapTime, setLastTapTime] = useState(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const timeoutRef = useRef(null);
+  const alertTimeoutRef = useRef(null);
 
   useEffect(() => {
     const socket = socketIOClient(arduinoServerUrl);
 
     socket.on('tagData', receivedData => {
+      const now = new Date();
+      if (lastTapTime && now - lastTapTime < 60000 && receivedData === currentTagData) {
+        setIsAlertVisible(true);
+        if (alertTimeoutRef.current) {
+          clearTimeout(alertTimeoutRef.current);
+        }
+        alertTimeoutRef.current = setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000); // Hide alert after 5 seconds
+        return;
+      }
+
       isValidTagData(receivedData).then((isValid) => {
         if (isValid) {
           setCurrentTagData(receivedData);
-          setCurrentTime(new Date().toLocaleString()); // Update current time when tagData changes
+          setCurrentTime(now.toLocaleString());
+          setLastTapTime(now);
           fetchStudentInfo(receivedData);
         }
       });
@@ -28,8 +45,14 @@ const LibraryContent = ({ borderRadiusLG }) => {
 
     return () => {
       socket.disconnect();
+      if (alertTimeoutRef.current) {
+        clearTimeout(alertTimeoutRef.current);
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
-  }, []);
+  }, [lastTapTime, currentTagData]);
 
   const isValidTagData = async (tagData) => {
     try {
@@ -54,7 +77,10 @@ const LibraryContent = ({ borderRadiusLG }) => {
         fetchTapStatus(matchedStudent.user_id);
 
         // Clear the data after 10 seconds
-        setTimeout(() => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
           setCurrentStudentInfo(null);
           setCurrentTapStatus('');
         }, 10000);
@@ -93,10 +119,28 @@ const LibraryContent = ({ borderRadiusLG }) => {
         minHeight: 280,
         background: "rgb(252, 252, 252)",
         borderRadius: 12,
-        display: "flex"
+        display: "flex",
+        position: "relative"
       }}
     >
-      {currentStudentInfo && (
+      {isAlertVisible && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000
+        }}>
+          <Alert
+            message="Duplicate Tap Detected"
+            description="You've already tapped your RFID card. Please wait for a minute before tapping again."
+            type="warning"
+            showIcon
+          />
+        </div>
+      )}
+
+      {currentStudentInfo ? (
         <>
           <div className='border-solid border-r w-1/3 m-0 h-full'>
             <div className='shadow-sm w-full h-[60%] flex justify-center items-center'>
@@ -137,9 +181,7 @@ const LibraryContent = ({ borderRadiusLG }) => {
             </div>
           </div>
         </>
-      )}
-
-      {!currentStudentInfo && (
+      ) : (
         <>
           <div className='border-solid border-r w-1/3 m-0 h-full'>
             <div className='shadow-sm w-full h-[60%] flex justify-center items-center'>
@@ -156,13 +198,6 @@ const LibraryContent = ({ borderRadiusLG }) => {
           </div>
 
           <div className='w-2/3 h-full py-14 px-10 flex items-center'>
-            {/* <div className='space-y-4'>
-              <p className='librarian-text'>TUP ID: </p>
-              <p className='librarian-text'>Name: </p>
-              <p className='librarian-text'>Course: </p>
-              <p className='librarian-text'>Section:</p>
-              <p className='librarian-text'>Time: </p>
-            </div> */}
             <div className='flex justify-center w-full'>
               <p className='sm:text-xl md:text-3xl lg:text-5xl 2xl:text-8xl font-sans font-bold text-gray-500'>TAP YOUR RFID CARD</p>
             </div>

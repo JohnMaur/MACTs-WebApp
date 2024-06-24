@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Menu, Layout } from 'antd';
 import { SolutionOutlined, LogoutOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 
 const { Sider } = Layout;
 
 const GuardSidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
+  const { facultyLogout } = useContext(AuthContext);
 
   // Function to handle submenu open keys
   const handleOpenChange = (keys) => {
@@ -22,6 +24,10 @@ const GuardSidebar = ({ collapsed }) => {
     // Update the openKeys state with the submenu key
     setOpenKeys(submenuKey ? [submenuKey] : []);
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    facultyLogout();
+  };
 
   return (
     <Sider
@@ -48,8 +54,8 @@ const GuardSidebar = ({ collapsed }) => {
           <Link to="/Facility/Gatepass/Report">Report</Link>
         </Menu.Item>
 
-        <Menu.Item key="/login" icon={<LogoutOutlined />}>
-          <Link to="/login">Log out</Link>
+        <Menu.Item key="/logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+          Log out
         </Menu.Item>
       </Menu>
     </Sider>

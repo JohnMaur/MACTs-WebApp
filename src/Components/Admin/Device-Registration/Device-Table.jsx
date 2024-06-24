@@ -98,7 +98,7 @@ const DeviceTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.post('http://localhost:2526/DeviceList');
+      const response = await axios.post('https://macts-backend-webapp.onrender.com/DeviceList');
       const responseData = response.data;
       const transformedData = responseData.map((item, index) => ({
         key: `${index + 1}`,

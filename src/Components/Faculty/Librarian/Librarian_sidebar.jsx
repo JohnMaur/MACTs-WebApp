@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Menu, Layout } from 'antd';
 import { IdcardOutlined, SolutionOutlined, LogoutOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -9,6 +10,7 @@ const { SubMenu } = Menu;
 const Librarian_Sidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
+  const { facultyLogout } = useContext(AuthContext);
 
   // Function to handle submenu open keys
   const handleOpenChange = (keys) => {
@@ -23,6 +25,10 @@ const Librarian_Sidebar = ({ collapsed }) => {
     // Update the openKeys state with the submenu key
     setOpenKeys(submenuKey ? [submenuKey] : []);
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    facultyLogout();
+  };
 
   return (
     <Sider
@@ -49,8 +55,8 @@ const Librarian_Sidebar = ({ collapsed }) => {
           <Link to="/Facility/Library/Report/">Report</Link>
         </Menu.Item>
 
-        <Menu.Item key="/login" icon={<LogoutOutlined />}>
-          <Link to="/login">Log out</Link>
+        <Menu.Item key="/logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+          Log out
         </Menu.Item>
       </Menu>
     </Sider>

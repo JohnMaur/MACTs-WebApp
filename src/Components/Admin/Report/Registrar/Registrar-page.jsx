@@ -13,7 +13,7 @@ const AdminRegistrarReport = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <MainSidebar collapsed={collapsed} />
-      <Layout style={{ maxHeight: '100vh' }}>
+      <Layout style={{ maxHeight: '100vh', overflowY: "auto"  }}>
         <CustomHeader collapsed={collapsed} setCollapsed={setCollapsed} />
         <RegistrarContent colorBgContainer={colorBgContainer} borderRadiusLG={borderRadiusLG} />
       </Layout>

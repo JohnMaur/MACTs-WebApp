@@ -10,7 +10,7 @@ const { SubMenu } = Menu;
 const Sidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
-  const { logout } = useContext(AuthContext);
+  const { adminLogout } = useContext(AuthContext);
 
   // Function to handle submenu open keys
   const handleOpenChange = (keys) => {
@@ -27,7 +27,7 @@ const Sidebar = ({ collapsed }) => {
   }, [location.pathname]);
 
   const handleLogout = () => {
-    logout();
+    adminLogout();
   };
 
   return (
@@ -99,6 +99,10 @@ const Sidebar = ({ collapsed }) => {
         <Menu.Item key="/Registration/Device" icon={<IdcardOutlined />}>
           <Link to="/Registration/Device">Device Registration</Link>
         </Menu.Item>
+
+        {/* <Menu.Item key="/logout" icon={<LogoutOutlined />}>
+        <Link to="/login/admin">Logout</Link>
+        </Menu.Item> */}
 
         <Menu.Item key="/logout" icon={<LogoutOutlined />} onClick={handleLogout}>
           Log out

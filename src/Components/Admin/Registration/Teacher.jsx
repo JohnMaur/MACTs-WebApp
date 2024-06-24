@@ -25,7 +25,7 @@ const TeacherRegistration = ({ colorBgContainer, borderRadiusLG }) => {
     }
 
     // Proceed with signup
-    fetch('http://localhost:2526/teacherSignUp', {
+    fetch('https://macts-backend-webapp.onrender.com/teacherSignUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -58,12 +58,13 @@ const TableHeaderCell = (props) => {
   const style = {
     ...props.style,
     cursor: 'move',
+    zIndex: isDragging ? 9999 : 1,
     ...(isDragging
       ? {
-        position: 'relative',
-        zIndex: 9999,
-        userSelect: 'none',
-      }
+          position: 'relative',
+          zIndex: 9999,
+          userSelect: 'none',
+        }
       : {}),
     ...dragActiveStyle(dragState, props.id),
   };
@@ -87,8 +88,8 @@ const AttendanceReportTable = () => {
       dataIndex: 'name',
     },
     {
-      title: 'Code',
-      dataIndex: 'code',
+      title: 'Attendance Description',
+      dataIndex: 'attendanceDescription',
     },
     {
       title: 'Course',
@@ -110,12 +111,13 @@ const AttendanceReportTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:2526/attendance/report/${attendance_code}`);
+        const response = await axios.post(`https://macts-backend-webapp.onrender.com/attendance/report/${attendance_code}`);
         const responseData = response.data;
         const transformedData = responseData.map((item) => ({
           key: item.id,
           tuptId: item.attendance_tupId,
           name: item.attendance_firstName,
+          attendanceDescription: item.attendance_description, // Change this line
           code: item.attendance_code,
           course: item.attendance_course,
           section: item.attendance_section,
@@ -134,7 +136,6 @@ const AttendanceReportTable = () => {
     fetchData();
   }, [attendance_code]); // Fetch data whenever attendance_code changes
 
-
   useEffect(() => {
     // Filter data based on search text
     const filtered = data.filter((item) =>
@@ -146,7 +147,6 @@ const AttendanceReportTable = () => {
     // Reverse the filtered array to ensure the latest data is displayed first
     setFilteredData(filtered.reverse());
   }, [searchText, data]);
-  
 
   const handleSearch = () => {
     // Triggered when the search button is clicked
@@ -248,7 +248,6 @@ const AttendanceReportTable = () => {
           </th>
         </DragOverlay>
       </DndContext>
-
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
-import { Layout, message } from 'antd'; // Import message from antd for displaying alerts
+import { Layout, message } from 'antd';
 import axios from 'axios';
 
 const { Content: AntdContent } = Layout;
-const serverUrl = 'http://localhost:2828'; // Change the port to match your server's port
+const serverUrl = ('wss://macts-backend-rfid-registration.onrender.com');
 
 const RFID_Content = ({ borderRadiusLG }) => {
   const [tagHistory, setTagHistory] = useState([]);
@@ -33,7 +33,7 @@ const RFID_Content = ({ borderRadiusLG }) => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:2526/rfidRegistration/studentInfo?tuptId=${searchValue}`);
+      const response = await axios.get(`https://macts-backend-webapp.onrender.com/rfidRegistration/studentInfo?tuptId=${searchValue}`);
       const studentData = response.data;
       setStudentInfo(studentData);
     } catch (error) {
@@ -48,10 +48,10 @@ const RFID_Content = ({ borderRadiusLG }) => {
         console.error('TUPT ID and RFID tag value are required.');
         return;
       }
-  
+
       // Make a POST request to insert the RFID tag value into the database
-      const response = await axios.post(`http://localhost:2526/rfidRegistration/${searchValue}`, {
-        deviceCode: rfidTagValue
+      const response = await axios.post(`https://macts-backend-webapp.onrender.com/rfidRegistration/${searchValue}`, {
+        tagValue: rfidTagValue
       });
 
       if (response.data.error === 'Duplicate tagValue') {
@@ -85,10 +85,15 @@ const RFID_Content = ({ borderRadiusLG }) => {
         minHeight: 420,
         background: "white",
         borderRadius: borderRadiusLG,
+        overflowX: 'auto', 
       }}
     >
-      <div className='flex flex-col md:flex-row h-full'>
-        <div className="bg-slate-50 flex-1 my-10 mx-5 ml-10 shadow-md rounded-lg md:max-h-[370px] md:overflow-y-auto">
+      {/* <div className='flex sm:flex-col lg:flex-row h-full'> */}
+      <div className='lg:flex lg:flex-row h-full sm:flex-col '>
+        <div className="
+          sm:max-h-[25rem] min-w-20rem min-h-20rem
+          bg-slate-50 flex-1 my-10 mx-5 ml-10 shadow-md rounded-lg md:max-h-[370px] md:overflow-y-auto
+          ">
           <h1 className='text-lg font-bold mx-5 mt-5 mb-2'>RFID Tag History</h1>
           <ul>
             {tagHistory.map((entry, index) => (
@@ -102,39 +107,40 @@ const RFID_Content = ({ borderRadiusLG }) => {
           </ul>
         </div>
 
-        <div className=" flex-1 md:h-5/6 my-10 mx-5 mr-10 flex">
-          <div className="flex-1 md:overflow-y-auto h-[95%] mx-8 bg-slate-50 shadow-md p-5 px-10 rounded-lg> ">
-            <p className='text-2xl'>Name: <span className='font-bold'>{studentInfo.length > 0 ? `${studentInfo[0].studentInfo_first_name} ${studentInfo[0].studentInfo_middle_name} ${studentInfo[0].studentInfo_last_name}` : ''}</span></p>
-            <p className='text-2xl'>TUPT ID: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_tuptId : ''}</span></p>
-            <p className='text-2xl'>Course: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_course : ''}</span></p>
-            <p className='text-2xl'>Section: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_section : ''}</span></p>
+        <div className="flex-1 md:h-5/6 my-10 mx-5 mr-10 flex sm:max-h-[22rem] lg:max-h-[25rem]">
+          <div className="flex-1 md:overflow-y-auto h-[95%] mx-8 bg-slate-50 shadow-md p-5 px-10 rounded-lg">
+            <p className='text-xl md:text-2xl lg:text-3xl'>Name: <span className='font-bold'>{studentInfo.length > 0 ? `${studentInfo[0].studentInfo_first_name} ${studentInfo[0].studentInfo_middle_name} ${studentInfo[0].studentInfo_last_name}` : ''}</span></p>
+            <p className='text-xl md:text-2xl lg:text-3xl'>TUPT ID: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_tuptId : ''}</span></p>
+            <p className='text-xl md:text-2xl lg:text-3xl'>Course: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_course : ''}</span></p>
+            <p className='text-xl md:text-2xl lg:text-3xl'>Section: <span className='font-bold'>{studentInfo.length > 0 ? studentInfo[0].studentInfo_section : ''}</span></p>
             <input
-              className="w-full my-4 py-1.5 rounded-lg px-5 border-black border-solid border-[1px]"
+              className="w-full my-4 py-2 md:py-1.5 lg:py-2 rounded-lg px-5 border-black border-solid border-[1px]"
               type="text"
               placeholder='TUPT-**-****'
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
             <input
-              className="w-full mb-4 py-1.5 rounded-lg px-5 border-black border-solid border-[1px]"
+              className="w-full mb-4 py-2 md:py-1.5 lg:py-2 rounded-lg px-5 border-black border-solid border-[1px]"
               type="text"
               placeholder='Insert your RFID tag'
               value={rfidTagValue}
               onChange={(e) => setRfidTagValue(e.target.value)}
             />
 
-            <div className='flex gap-2'>
-              <button className='bg-white text-black px-10 py-2 rounded-lg hover:bg-gray-50 active:opacity-40 border-[1px] border-black border-solid'
+            <div className='flex flex-col md:flex-row md:gap-2'>
+              <button className='bg-white text-black px-10 py-2 md:py-2 lg:py-3 rounded-lg hover:bg-gray-50 active:opacity-40 border-[1px] border-black border-solid'
                 onClick={handleSearch}>
                 Search
               </button>
-              <button className='bg-black text-white px-10 py-2 rounded-lg hover:opacity-70 active:opacity-40'
+              <button className='bg-black text-white px-10 py-2 md:py-2 lg:py-3 rounded-lg hover:opacity-70 active:opacity-40 mt-2 md:mt-0'
                 onClick={handleRegister}>
                 Register
               </button>
             </div>
           </div>
         </div>
+
       </div>
     </AntdContent>
   );

@@ -4,7 +4,8 @@ import { Layout, message } from 'antd'; // Import message from antd for displayi
 import axios from 'axios';
 
 const { Content: AntdContent } = Layout;
-const serverUrl = 'http://localhost:3232'; // Change the port to match your server's port
+// const serverUrl = 'http://localhost:3232'; 
+const serverUrl = ('wss://macts-backend-device-registration.onrender.com');
 
 const DeviceRegistration = () => {
   const [tagHistory, setTagHistory] = useState([]);
@@ -33,7 +34,7 @@ const DeviceRegistration = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:2526/deviceRegistration?serialNumber=${searchValue}`);
+      const response = await axios.get(`https://macts-backend-webapp.onrender.com/deviceRegistration?serialNumber=${searchValue}`);
       const studentDevice = response.data;
       setDeviceInfo(studentDevice);
     } catch (error) {
@@ -52,7 +53,7 @@ const DeviceRegistration = () => {
       }
 
       // Make a POST request to insert the device code value into the database
-      const response = await axios.post(`http://localhost:2526/deviceRegistration/${searchValue}`, {
+      const response = await axios.post(`https://macts-backend-webapp.onrender.com/deviceRegistration/${searchValue}`, {
         deviceCode: deviceCodeValue
       });
 

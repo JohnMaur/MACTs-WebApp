@@ -107,7 +107,7 @@ const LibraryTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try { 
-        const response = await axios.get('http://localhost:2526/Library-Report');
+        const response = await axios.get('https://macts-backend-webapp.onrender.com/Library-Report');
         const responseData = response.data;
         const transformedData = responseData.map((item, index) => ({
           key: `${index + 1}`,

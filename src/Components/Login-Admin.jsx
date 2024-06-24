@@ -19,7 +19,7 @@ function AdminLogin() {
   const adminLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:2526/admin', {
+      const response = await axios.post('https://macts-backend-webapp.onrender.com/admin', {
         admin_username: adminUsername,
         admin_password: adminPassword,
       });

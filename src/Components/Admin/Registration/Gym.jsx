@@ -18,7 +18,7 @@ const GymRegistration = ({ borderRadiusLG }) => {
     }
 
     // Proceed with signup
-    fetch('http://localhost:2526/GymSignUp', {
+    fetch('https://macts-backend-webapp.onrender.com/GymSignUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
